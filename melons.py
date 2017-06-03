@@ -16,7 +16,16 @@ class AbstractMelonOrder(object):
         """Calculate price, including tax."""
 
         base_price = 5
-        total = (1 + self.tax) * self.qty * base_price
+        international_fee = 0
+        
+
+        if self.species == "Christmas_Melon":
+            base_price = base_price * 1.5
+        
+        if self.order_type == "international" and self.qty < 10:
+            international_fee = 3
+
+        total = ((1 + self.tax) * self.qty * base_price) + international_fee
 
         return total
 
@@ -48,24 +57,29 @@ class InternationalMelonOrder(AbstractMelonOrder):
 
         return self.country_code
 
-class ChristmasMelonOrder(AbstractMelonOrder):
-    """Christmas Melon Order"""
+class GovernmentMelonOrder(AbstractMelonOrder):
+    """Government Melon Order"""
 
-    def __init__(self, species, qty, country_code):
-        """INitialize melon order attributes"""
-        super(ChristmasMelonOrder, self). __init__(species, qty, christmas_price)
+    def __init__(self, species, qty, passed_inpection):
+        """Initialize melon order attributes"""
+        super(GovernmentMelonOrder, self). __init__(species, qty, "domestic", 0)
 
-        self.country_code = country_code
+        self.passed_inpection = False
 
-    def get_total(self):
-        """Calculate price, including tax."""
+    def mark_inspection(passed):
+        """Updates whether melon has passed inspection"""
+        
+        return self.passed_inpection
 
-        base_price = 5 * 1.5
-        if qty >= 10:
-            total = (1 + self.tax) * self.qty * base_price
-            if order_type == "international" and qty < 10:
-                total = ((1 + self.tax) * self.qty * base_price) + 3
-            else:
-                total = (1 + self.tax) * self.qty * base_price
+#     def get_total(self):
+#         """Calculate price, excluding tax."""
 
-        return total
+#         base_price = 5 * 1.5
+#         if qty >= 10:
+#             total = (1 + self.tax) * self.qty * base_price
+#             if order_type == "international" and qty < 10:
+#                 total = ((1 + self.tax) * self.qty * base_price) + 3
+#             else:
+#                 total = (1 + self.tax) * self.qty * base_price
+
+#         return total
